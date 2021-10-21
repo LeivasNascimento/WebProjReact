@@ -23,11 +23,15 @@ export class FetchProduto extends Component {
         window.location.href = "/produto/edit/" + id;
     }
 
+    handleNew() {
+        window.location.href = "/add-produto";
+    }
+
     static handleDelete(id) {
         if (!window.confirm("você deseja deletar o produto : " + id + " ?")) {
             return;
         } else {
-            fetch('api/produtos/' + id, { method: 'delete' })
+            fetch('api/produto/' + id, { method: 'delete' })
                 .then(json => {
                     window.location.href = "fetch-produto";
                     alert('item excluído com sucesso!');
@@ -80,7 +84,7 @@ export class FetchProduto extends Component {
                     <h1 id="tableLabel"> Produtos </h1>
                     <p>Tela de Listagem de Produtos</p>
                     <p>
-                        <Link to="/add-produto">
+                        <Link onClick={this.handleNew}>
                             Cadastrar Produto
                         </Link>
                     </p>

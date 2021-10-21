@@ -47,38 +47,13 @@ namespace WebProjReact.Controllers
             return produto;
         }
 
-        // GET: Produto/Create
-        public ActionResult<Produto> Create()
-        {
-            return new Produto();
-        }
-
-        // POST: Produto/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        public async Task<IActionResult> Create([FromForm] Produto produto)
+        public async Task<ActionResult<Produto>> PostProduto([FromForm] Produto produto)
         {
-                _context.Add(produto);
-                await _context.SaveChangesAsync();
+            _context.Produto.Add(produto);
+            await _context.SaveChangesAsync();
 
-            return Ok("Produto incluído com sucesso");
-        }
-
-        // GET: Produto/Edit/5
-        public async Task<ActionResult<Produto>> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var produto = await _context.Produto.FindAsync(id);
-            if (produto == null)
-            {
-                return NotFound();
-            }
-            return (produto);
+            return CreatedAtAction("GetProduto", new { id = produto.Id }, produto);
         }
 
         // POST: Produto/Edit/5
@@ -129,17 +104,6 @@ namespace WebProjReact.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
-        }
-
-        // POST: Produto/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var produto = await _context.Produto.FindAsync(id);
-            _context.Produto.Remove(produto);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
         }
 
         private bool ProdutoExists(int id)

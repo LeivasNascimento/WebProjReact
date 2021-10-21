@@ -2,13 +2,23 @@
 import React, { Component } from "react"
 import { Link } from 'react-router-dom'
 
+export class Produto {
+    constructor() {
+        this.id = 0;
+        this.descricao = "";
+    }
+}
+
+
 export class AddProduto extends Component {
 
     constructor(props) {
         super(props);
-        //this.state({ produtos : [], loading : true })
-        this.state({ title: "", produto: new Produto(), loading: true });
+       
+        this.state = { title: "", produto: new Produto(), loading: true };
         this.inicialize();
+        this.handleCancel = this.handleCancel.bind(this);
+        this.handleSalvar = this.handleSalvar.bind(this);
     }
 
     async inicialize() {
@@ -17,14 +27,14 @@ export class AddProduto extends Component {
             const response = await fetch('api/Produto/' + id);
             const data = await response.json();
             this.setState({ title: "Edit", produto: data, loading: false });
+
         } else {
-            this.state({ title: "Create", produto: new Produto(), loading: false });
+            this.state = { title: "Create", produto: new Produto(), loading: false };
         }
     }
 
-    static renderCreateForm() {
-        return
-        (
+    renderCreateForm() {
+        return (
             <form onSubmit={this.handleSalvar}>
                 <div className="form-group row">
                     <input type="hidden" name="id" value={this.state.produto.id} />
@@ -39,40 +49,40 @@ export class AddProduto extends Component {
                     <button type="submit" className="btn btn-success" value={this.state.produto.id}>Salvar</button>
                     <button className="btn btn-danger" onClick={this.handleCancel}>Cencelar</button>
                 </div>
-            </form> 
+            </form>
         );
     }
 
-    static handleCancel(event) {
+    handleCancel(event) {
         event.preventDefault();
-        this.props.history.push("fetch-produto");
+        //this.props.history.push("/fetch-produto"); //n obriga o servidor a trazer as info de novo
+        window.location.href = "fetch-produto"; //obriga trazer do servido novamente
     }
 
-    static handleSalvar(event) {
+    async handleSalvar(event) {
+        debugger
         event.preventDefault();
         const data = new FormData(event.target);
 
         if (this.state.produto.id) {
-            const response1 = fetch('api/Produto/' + this.state.produto.id, { method: "PUT", body: data });
-            this.props.history.push("fetch-produto");
+            const response1 = await fetch('api/Produto/' + this.state.produto.id, { method: 'PUT', body: data });
+            this.props.history.push("/fetch-produto");
         } else {
-            const response2 = fetch('api/Produto/', { method: "POST", body: data });
-            this.props.history.push("fetch-produto");
+            const response2 = await fetch('api/Produto/', { method: 'POST', body: data });
+            this.props.history.push("/fetch-produto");
         }
     }
 
     render() {
         let contents = this.state.loading ?
             <p><em> Carregando ... </em> </p>
-            : AddProduto.renderCreateForm();
+            : this.renderCreateForm()
 
         return (
                 <div>
                     <h1> {this.state.title} </h1>
                     <p>
-                        {title == "Edit" ?
-                            Cadastrar : Editar}
-                            Produto
+                       Produto
                     </p>
                     {contents}
                 </div>
