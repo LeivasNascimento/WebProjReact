@@ -11,5 +11,7 @@ namespace WebProjReact.Configuracao
         }
 
         public DbSet<Produto> Produto { get; set; }
+        public DbSet<Cliente> Cliente { get; set; }
+
     }
 }

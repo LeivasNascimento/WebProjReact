@@ -22,6 +22,16 @@ namespace WebProjReact
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy", builder => builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                //.AllowCredentials()
+                );
+            });
+
             services.AddDbContext<Contexto>
                 (options => options.UseSqlServer
                 (Configuration.GetConnectionString("DefaultConnection")));
@@ -49,6 +59,7 @@ namespace WebProjReact
                 app.UseHsts();
             }
 
+            app.UseCors("CorsPolicy");
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
